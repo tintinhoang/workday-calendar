@@ -64,6 +64,14 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         return dateTime;
     }
 
+    private ZonedDateTime nextWorkMinute(ZonedDateTime dateTime, int step) {
+        do {
+            dateTime = dateTime.plusMinutes(step);
+        } while (!isWorkTime(dateTime.toLocalTime()));
+
+        return dateTime;
+    }
+
     private boolean isWorkDate(LocalDate date) {
         return !isWeekend(date) && !isHoliday(date) && !isRecurringHoliday(date);
     }
