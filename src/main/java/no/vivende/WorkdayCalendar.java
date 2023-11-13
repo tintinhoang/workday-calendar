@@ -64,7 +64,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     }
 
     private ZonedDateTime nearestValidWorkDateAndTime(ZonedDateTime dateTime, double increment) {
-        final var step = (int) Math.signum(increment);
+        final var step = increment == 0 ? 1 : (int) Math.signum(increment);
 
         if (!isWorkTime(dateTime.toLocalTime())) {
             dateTime = nextWorkMinute(dateTime, step);

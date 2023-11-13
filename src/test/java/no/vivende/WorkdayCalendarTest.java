@@ -71,6 +71,22 @@ class WorkdayCalendarTest {
         assertEquals("01-06-2023 02:00", f.format(result));
     }
 
+    @Test
+    void getWorkdayIncrement_should_return_same_workday_when_increment_is_zero_and_start_date_is_valid() {
+        final var start = toDate("24-05-2023 08:00");
+        final var increment = 0f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("24-05-2023 08:00", f.format(result));
+    }
+
+    @Test
+    void getWorkdayIncrement_should_return_next_valid_date_and_time_when_increment_is_zero_and_start_date_is_invalid() {
+        final var start = toDate("27-05-2023 07:00");
+        final var increment = 0f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("29-05-2023 08:00", f.format(result));
+    }
+
     private Date toDate(String dateString) {
         try {
             return f.parse(dateString);
