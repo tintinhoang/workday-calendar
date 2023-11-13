@@ -49,12 +49,12 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         var dateTime = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
         final var minutesInADay = 24 * 60;
         final var workDayDurationInMinutes = (MINUTES.between(startTime, stopTime) + minutesInADay) % minutesInADay;
-        final var minutesToAdd = trunc(BigDecimal.valueOf(increment)
+        final var minutesToAdd = BigDecimal.valueOf(increment)
                 .remainder(BigDecimal.ONE)
                 .multiply(BigDecimal.valueOf(workDayDurationInMinutes))
                 .setScale(0, RoundingMode.FLOOR)
-                .doubleValue());
-        final var daysToAdd = trunc(increment);
+                .longValue();
+        final var daysToAdd = (long) increment;
 
         dateTime = nearestValidWorkDateAndTime(dateTime, increment);
         dateTime = addWorkMinutes(dateTime, minutesToAdd);
@@ -79,9 +79,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     private ZonedDateTime addWorkDays(ZonedDateTime dateTime, long days) {
         final var step = Long.signum(days);
-        var remainingDays = Math.abs(days);
+        var daysToAdd = Math.abs(days);
 
-        for (long i = 0; i < remainingDays; i++) {
+        for (long i = 0; i < daysToAdd; i++) {
             dateTime = nextWorkDate(dateTime, step);
         }
 
@@ -90,9 +90,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     private ZonedDateTime addWorkMinutes(ZonedDateTime dateTime, long minutes) {
         final var step = Long.signum(minutes);
-        var remainingMinutes = Math.abs(minutes);
+        var minutesToAdd = Math.abs(minutes);
 
-        for (long i = 0; i < remainingMinutes; i++) {
+        for (long i = 0; i < minutesToAdd; i++) {
             dateTime = nextWorkMinute(dateTime, step);
         }
 
@@ -138,9 +138,5 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     private boolean isRecurringHoliday(LocalDate date) {
         final var monthDay = MonthDay.from(date);
         return recurringHolidays.contains(monthDay);
-    }
-
-    private static long trunc(double value) {
-        return (long) (value < 0 ? Math.ceil(value) : Math.floor(value));
     }
 }
