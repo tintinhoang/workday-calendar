@@ -61,6 +61,14 @@ class WorkdayCalendarTest {
     }
 
     @Test
+    void getWorkdayIncrement_should_skip_weekend() {
+        final var start = toDate("19-05-2023 08:00");
+        final var increment = 1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("22-05-2023 08:00", f.format(result));
+    }
+
+    @Test
     void getWorkdayIncrement_should_support_night_shift() {
         calendar.setWorkdayStartAndStop(
                 new GregorianCalendar(2023, Calendar.JANUARY, 1, 22, 0),
