@@ -45,6 +45,20 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         return null;
     }
 
+    private ZonedDateTime nearestValidWorkDateAndTime(ZonedDateTime dateTime, double increment) {
+        final var step = (int) Math.signum(increment);
+
+        if (!isWorkTime(dateTime.toLocalTime())) {
+            dateTime = nextWorkMinute(dateTime, step);
+        }
+
+        if (!isWorkDate(dateTime.toLocalDate())) {
+            dateTime = nextWorkDate(dateTime, step);
+        }
+
+        return dateTime;
+    }
+
     private ZonedDateTime addWorkDays(ZonedDateTime dateTime, long days) {
         final var step = Long.signum(days);
         var remainingDays = Math.abs(days);
