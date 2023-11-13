@@ -68,6 +68,10 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         return !isWeekend(date) && !isHoliday(date) && !isRecurringHoliday(date);
     }
 
+    private boolean isWorkTime(LocalTime time) {
+        return !time.isBefore(startTime) && !time.isAfter(stopTime);
+    }
+
     private boolean isWeekend(LocalDate date) {
         return weekendDaysOfWeek.contains(date.getDayOfWeek());
     }
