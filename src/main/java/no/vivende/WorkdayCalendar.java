@@ -1,7 +1,10 @@
 package no.vivende;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 interface IWorkdayCalendar {
     void setHoliday(Calendar date);
@@ -14,9 +17,13 @@ interface IWorkdayCalendar {
 }
 
 public class WorkdayCalendar implements IWorkdayCalendar {
+
+    private final Set<LocalDate> holidays = new HashSet<>();
+
     @Override
     public void setHoliday(Calendar date) {
-
+        final var localDate = LocalDate.ofInstant(date.toInstant(), date.getTimeZone().toZoneId());
+        holidays.add(localDate);
     }
 
     @Override
