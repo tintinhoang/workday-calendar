@@ -51,7 +51,6 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         final var minutesToAdd = BigDecimal.valueOf(increment)
                 .remainder(BigDecimal.ONE)
                 .multiply(BigDecimal.valueOf(workDayDurationInMinutes))
-                .setScale(0, RoundingMode.FLOOR)
                 .longValue();
         final var daysToAdd = (long) increment;
 

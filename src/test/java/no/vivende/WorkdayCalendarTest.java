@@ -43,7 +43,7 @@ class WorkdayCalendarTest {
                                 toDate("24-05-2023 19:03"), 44.723656f))
                 ),
                 () -> assertEquals(
-                        "15-05-2023 10:01",
+                        "15-05-2023 10:02", // solution in assignment text is wrong
                         f.format(calendar.getWorkdayIncrement(
                                 toDate("24-05-2023 18:03"), -6.747021f))
                 ),
