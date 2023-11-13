@@ -51,4 +51,8 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     private boolean isWeekend(LocalDate date) {
         return weekendDaysOfWeek.contains(date.getDayOfWeek());
     }
+
+    private boolean isHoliday(LocalDate date) {
+        return holidays.contains(date);
+    }
 }
