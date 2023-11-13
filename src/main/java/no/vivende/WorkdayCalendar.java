@@ -55,4 +55,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     private boolean isHoliday(LocalDate date) {
         return holidays.contains(date);
     }
+
+    private boolean isRecurringHoliday(LocalDate date) {
+        final var monthDay = MonthDay.from(date);
+        return recurringHolidays.contains(monthDay);
+    }
 }
