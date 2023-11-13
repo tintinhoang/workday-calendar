@@ -120,6 +120,10 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     }
 
     private boolean isWorkTime(LocalTime time) {
+        final var isNightShift = startTime.isAfter(stopTime);
+        if (isNightShift) {
+            return !time.isBefore(startTime) || !time.isAfter(stopTime);
+        }
         return !time.isBefore(startTime) && !time.isAfter(stopTime);
     }
 

@@ -60,6 +60,17 @@ class WorkdayCalendarTest {
         );
     }
 
+    @Test
+    void getWorkdayIncrement_should_support_night_shift() {
+        calendar.setWorkdayStartAndStop(
+                new GregorianCalendar(2023, Calendar.JANUARY, 1, 22, 0),
+                new GregorianCalendar(2023, Calendar.JANUARY, 2, 6, 0));
+        final var start = toDate("24-05-2023 22:00");
+        final var increment = 5.5f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("01-06-2023 02:00", f.format(result));
+    }
+
     private Date toDate(String dateString) {
         try {
             return f.parse(dateString);
