@@ -46,7 +46,6 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     @Override
     public Date getWorkdayIncrement(Date startDate, float increment) {
-        var dateTime = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
         final var minutesInADay = 24 * 60;
         final var workDayDurationInMinutes = (MINUTES.between(startTime, stopTime) + minutesInADay) % minutesInADay; // use minutes in a day to support night shift
         final var minutesToAdd = BigDecimal.valueOf(increment)
@@ -56,6 +55,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
                 .longValue();
         final var daysToAdd = (long) increment;
 
+        var dateTime = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
         dateTime = nearestValidWorkDateAndTime(dateTime, increment);
         dateTime = addWorkMinutes(dateTime, minutesToAdd);
         dateTime = addWorkDays(dateTime, daysToAdd);
@@ -64,7 +64,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     }
 
     private ZonedDateTime nearestValidWorkDateAndTime(ZonedDateTime dateTime, double increment) {
-        final var step = increment == 0 ? 1 : (int) Math.signum(increment);
+        final var step = increment == 0
+                ? 1 
+                : (int) Math.signum(increment);
 
         if (!isWorkTime(dateTime.toLocalTime())) {
             dateTime = nextWorkMinute(dateTime, step);
@@ -79,7 +81,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     private ZonedDateTime addWorkDays(ZonedDateTime dateTime, long days) {
         final var step = Long.signum(days);
-        var daysToAdd = Math.abs(days);
+        final var daysToAdd = Math.abs(days);
 
         for (long i = 0; i < daysToAdd; i++) {
             dateTime = nextWorkDate(dateTime, step);
@@ -90,7 +92,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     private ZonedDateTime addWorkMinutes(ZonedDateTime dateTime, long minutes) {
         final var step = Long.signum(minutes);
-        var minutesToAdd = Math.abs(minutes);
+        final var minutesToAdd = Math.abs(minutes);
 
         for (long i = 0; i < minutesToAdd; i++) {
             dateTime = nextWorkMinute(dateTime, step);
