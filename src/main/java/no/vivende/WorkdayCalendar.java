@@ -56,6 +56,17 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         return dateTime;
     }
 
+    private ZonedDateTime addWorkMinutes(ZonedDateTime dateTime, long minutes) {
+        final var step = Long.signum(minutes);
+        var remainingMinutes = Math.abs(minutes);
+
+        for (long i = 0; i < remainingMinutes; i++) {
+            dateTime = nextWorkMinute(dateTime, step);
+        }
+
+        return dateTime;
+    }
+
     private ZonedDateTime nextWorkDate(ZonedDateTime dateTime, int step) {
         do {
             dateTime = dateTime.plusDays(step);
