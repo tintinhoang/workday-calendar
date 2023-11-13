@@ -48,7 +48,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     public Date getWorkdayIncrement(Date startDate, float increment) {
         var dateTime = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
         final var minutesInADay = 24 * 60;
-        final var workDayDurationInMinutes = (MINUTES.between(startTime, stopTime) + minutesInADay) % minutesInADay;
+        final var workDayDurationInMinutes = (MINUTES.between(startTime, stopTime) + minutesInADay) % minutesInADay; // use minutes in a day to support night shift
         final var minutesToAdd = BigDecimal.valueOf(increment)
                 .remainder(BigDecimal.ONE)
                 .multiply(BigDecimal.valueOf(workDayDurationInMinutes))
