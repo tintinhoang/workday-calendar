@@ -1,7 +1,11 @@
 package no.vivende;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.*;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 interface IWorkdayCalendar {
     void setHoliday(Calendar date);
@@ -41,8 +45,22 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     }
 
     @Override
-    public Date getWorkdayIncrement(Date startDate, float incrementInWorkdays) {
-        return null;
+    public Date getWorkdayIncrement(Date startDate, float increment) {
+        var dateTime = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+        final var minutesInADay = 24 * 60;
+        final var workDayDurationInMinutes = (MINUTES.between(startTime, stopTime) + minutesInADay) % minutesInADay;
+        final var minutesToAdd = trunc(BigDecimal.valueOf(increment)
+                .remainder(BigDecimal.ONE)
+                .multiply(BigDecimal.valueOf(workDayDurationInMinutes))
+                .setScale(0, RoundingMode.FLOOR)
+                .doubleValue());
+        final var daysToAdd = trunc(increment);
+
+        dateTime = nearestValidWorkDateAndTime(dateTime, increment);
+        dateTime = addWorkMinutes(dateTime, minutesToAdd);
+        dateTime = addWorkDays(dateTime, daysToAdd);
+
+        return Date.from(dateTime.toInstant());
     }
 
     private ZonedDateTime nearestValidWorkDateAndTime(ZonedDateTime dateTime, double increment) {
@@ -116,5 +134,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     private boolean isRecurringHoliday(LocalDate date) {
         final var monthDay = MonthDay.from(date);
         return recurringHolidays.contains(monthDay);
+    }
+
+    private static long trunc(double value) {
+        return (long) (value < 0 ? Math.ceil(value) : Math.floor(value));
     }
 }
