@@ -69,6 +69,28 @@ class WorkdayCalendarTest {
     }
 
     @Test
+    void getWorkdayIncrement_should_skip_fixed_holidays() {
+        calendar.setHoliday(
+                new GregorianCalendar(2023, Calendar.MAY, 10, 0, 0));
+        final var start = toDate("09-05-2023 08:00");
+        final var increment = 1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("11-05-2023 08:00", f.format(result));
+    }
+
+    @Test
+    void getWorkdayIncrement_should_not_skip_fixed_holidays_from_other_years() {
+        calendar.setHoliday(
+                new GregorianCalendar(2022, Calendar.MAY, 10, 0, 0));
+        calendar.setHoliday(
+                new GregorianCalendar(2024, Calendar.MAY, 10, 0, 0));
+        final var start = toDate("09-05-2023 08:00");
+        final var increment = 1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("10-05-2023 08:00", f.format(result));
+    }
+
+    @Test
     void getWorkdayIncrement_should_support_night_shift() {
         calendar.setWorkdayStartAndStop(
                 new GregorianCalendar(2023, Calendar.JANUARY, 1, 22, 0),
