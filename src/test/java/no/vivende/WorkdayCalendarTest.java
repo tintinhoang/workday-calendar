@@ -61,6 +61,41 @@ class WorkdayCalendarTest {
     }
 
     @Test
+    void getWorkdayIncrement_should_increment_from_start_date_when_it_is_valid() {
+        final var start = toDate("24-05-2023 12:30");
+        final var increment = 1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("25-05-2023 12:30", f.format(result));
+    }
+
+    @Test
+    void getWorkdayIncrement_should_increment_from_nearest_valid_date_and_time_when_start_date_is_invalid() {
+        final var start = toDate("20-05-2023 05:00");
+        final var increment = 1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("23-05-2023 08:00", f.format(result));
+    }
+
+    @Test
+    void getWorkdayIncrement_should_support_negative_increment() {
+        final var start = toDate("24-05-2023 08:00");
+        final var increment = -1f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("23-05-2023 08:00", f.format(result));
+    }
+
+    @Test
+    void getWorkdayIncrement_should_support_part_time_workday() {
+        calendar.setWorkdayStartAndStop(
+                new GregorianCalendar(2023, Calendar.JANUARY, 1, 8, 0),
+                new GregorianCalendar(2023, Calendar.JANUARY, 1, 12, 0));
+        final var start = toDate("24-05-2023 08:00");
+        final var increment = 0.55f;
+        final var result = calendar.getWorkdayIncrement(start, increment);
+        assertEquals("24-05-2023 10:12", f.format(result));
+    }
+
+    @Test
     void getWorkdayIncrement_should_skip_weekend() {
         final var start = toDate("19-05-2023 08:00");
         final var increment = 1f;
