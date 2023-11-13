@@ -1,6 +1,7 @@
 package no.vivende;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ interface IWorkdayCalendar {
 public class WorkdayCalendar implements IWorkdayCalendar {
 
     private final Set<LocalDate> holidays = new HashSet<>();
+    private final Set<MonthDay> recurringHolidays = new HashSet<>();
 
     @Override
     public void setHoliday(Calendar date) {
@@ -28,7 +30,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
 
     @Override
     public void setRecurringHoliday(Calendar date) {
-
+        final var localDate = LocalDate.ofInstant(date.toInstant(), date.getTimeZone().toZoneId());
+        final var monthDay = MonthDay.of(localDate.getMonth(), localDate.getDayOfMonth());
+        recurringHolidays.add(monthDay);
     }
 
     @Override
