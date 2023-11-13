@@ -1,9 +1,6 @@
 package no.vivende;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.MonthDay;
+import java.time.*;
 import java.util.*;
 
 interface IWorkdayCalendar {
@@ -46,6 +43,14 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     @Override
     public Date getWorkdayIncrement(Date startDate, float incrementInWorkdays) {
         return null;
+    }
+
+    private ZonedDateTime nextWorkDate(ZonedDateTime dateTime, int step) {
+        do {
+            dateTime = dateTime.plusDays(step);
+        } while (!isWorkDate(dateTime.toLocalDate()));
+
+        return dateTime;
     }
 
     private boolean isWorkDate(LocalDate date) {
