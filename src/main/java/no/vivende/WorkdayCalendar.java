@@ -48,6 +48,10 @@ public class WorkdayCalendar implements IWorkdayCalendar {
         return null;
     }
 
+    private boolean isWorkDate(LocalDate date) {
+        return !isWeekend(date) && !isHoliday(date) && !isRecurringHoliday(date);
+    }
+
     private boolean isWeekend(LocalDate date) {
         return weekendDaysOfWeek.contains(date.getDayOfWeek());
     }
