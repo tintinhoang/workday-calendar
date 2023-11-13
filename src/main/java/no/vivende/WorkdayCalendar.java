@@ -1,12 +1,10 @@
 package no.vivende;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.MonthDay;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 interface IWorkdayCalendar {
     void setHoliday(Calendar date);
@@ -24,6 +22,7 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     private LocalTime stopTime = LocalTime.of(16, 0);
     private final Set<LocalDate> holidays = new HashSet<>();
     private final Set<MonthDay> recurringHolidays = new HashSet<>();
+    private final Set<DayOfWeek> weekendDaysOfWeek = new HashSet<>(Arrays.asList(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
 
     @Override
     public void setHoliday(Calendar date) {
@@ -47,5 +46,9 @@ public class WorkdayCalendar implements IWorkdayCalendar {
     @Override
     public Date getWorkdayIncrement(Date startDate, float incrementInWorkdays) {
         return null;
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        return weekendDaysOfWeek.contains(date.getDayOfWeek());
     }
 }
